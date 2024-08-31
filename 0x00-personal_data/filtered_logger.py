@@ -2,39 +2,43 @@
 """
 Module to obfuscate specified fields in a log message.
 """
+
 import re
 from typing import List
 import logging
 
 
-def filter_datum(fields: List[str], redaction: str,
-                 message: str, separator: str) -> str:
+def filter_datum(fields: List[str], redaction: str, message: str,
+                 separator: str) -> str:
     """
     Obfuscates specified fields in a log message.
+
     Args:
         fields (List[str]): A list of field names to obfuscate.
         redaction (str): The string used to replace field values.
         message (str): The log message to be obfuscated.
         separator (str): The character separating fields in the message.
+
     Returns:
         str: The obfuscated log message.
     """
-    pattern = f'{separator}({"|".join(fields)})=[^;]*'
+    pattern: str = f'{separator}({"|".join(fields)})=[^;]*'
     return re.sub(pattern, f'{separator}\\1={redaction}', message)
 
 
 class RedactingFormatter(logging.Formatter):
-    """ Redacting Formatter class
-        """
+    """class to obfuscate specified fields in log records."""
 
-    REDACTION = "***"
-    FORMAT = "[HOLBERTON] %(name)s %(levelname)s %(asctime)-15s: %(message)s"
-    SEPARATOR = ";"
+    REDACTION: str = "***"
+    FORMAT: str = (
+        "[HOLBERTON] %(name)s %(levelname)s %(asctime)-15s: %(message)s"
+    )
+    SEPARATOR: str = ";"
 
     def __init__(self, fields: List[str]) -> None:
         """Initialize the formatter with fields to be redacted."""
         super(RedactingFormatter, self).__init__(self.FORMAT)
-        self.fields = fields
+        self.fields: List[str] = fields
 
     def format(self, record: logging.LogRecord) -> str:
         """
@@ -46,5 +50,6 @@ class RedactingFormatter(logging.Formatter):
         Returns:
             str: The formatted log record with obfuscated fields.
         """
-        return filter_datum(self.fields, self.REDACTION,
-                            super().format(record), self.SEPARATOR)
+        formatted_message: str = super().format(record)
+        return filter_datum(self.fields,
+                            self.REDACTION, formatted_message, self.SEPARATOR)
