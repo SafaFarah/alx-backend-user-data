@@ -32,3 +32,9 @@ def unauthorized() -> str:
     Endpoint that raises a 401 Unauthorized error.
     """
     abort(401)
+
+
+@app_views.route('/forbidden', methods=['GET'])
+def forbidden() -> str:
+    """ Endpoint that raises a 403 Forbidden error """
+    abort(403)
