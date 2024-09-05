@@ -73,19 +73,15 @@ class BasicAuth(Auth):
             None: If the email or password is invalid,
             or if no user is with the given email.
         """
-        if not isinstance(user_email, str):
-            return None
-        if not isinstance(user_pwd, str):
-            return None
-        try:
-            users = User.search({'email': user_email})
-        except Exception:
-            return None
-        if len(users) <= 0:
-            return None
-        user = user[0]
-        if user.is_valid_password(user_pwd):
-            return user
+        if type(user_email) == str and type(user_pwd) == str:
+            try:
+                users = User.search({'email': user_email})
+            except Exception:
+                return None
+            if len(users) <= 0:
+                return None
+            if users[0].is_valid_password(user_pwd):
+                return users[0]
         return None
 
     def current_user(self, request=None) -> TypeVar('User'):
