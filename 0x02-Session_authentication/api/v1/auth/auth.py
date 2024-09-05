@@ -2,6 +2,7 @@
 """ Module to manage API authentication """
 from typing import List, TypeVar
 from flask import request
+from os import getenvi
 
 
 class Auth:
@@ -39,3 +40,10 @@ class Auth:
         Returns None. Request will be the Flask request object.
         """
         return None
+
+    def session_cookie(self, request=None):
+        """ Get the session cookie value from the request """
+        if request is None:
+            return None
+        cookie_name = getenv("SESSION_NAME", "_my_session_id")
+        return request.cookies.get(cookie_name)
