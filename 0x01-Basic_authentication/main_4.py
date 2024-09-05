@@ -1,12 +1,14 @@
-#!/usr/bin/env python3
-""" Main 4
+#!/usr/bin/python3
+""" Check response
 """
-from api.v1.auth.basic_auth import BasicAuth
 
-a = BasicAuth()
+if __name__ == "__main__":
+    from api.v1.auth.basic_auth import BasicAuth
 
-print(a.extract_user_credentials(None))
-print(a.extract_user_credentials(89))
-print(a.extract_user_credentials("Holberton School"))
-print(a.extract_user_credentials("Holberton:School"))
-print(a.extract_user_credentials("bob@gmail.com:toto1234"))
+    ba = BasicAuth()
+    res = ba.user_object_from_credentials("u1@gmail.com", "pwd")
+    if res is not None:
+        print("user_object_from_credentials must return None if 'user_email' is not linked to any user")
+        exit(1)
+    
+    print("OK", end="")
