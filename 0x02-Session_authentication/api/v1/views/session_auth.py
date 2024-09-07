@@ -3,12 +3,10 @@
 """
 Session authentication routes.
 """
-from flask import jsonify, request, abort
-from models.user import User
-from api.v1.views import app_views
 import os
-from api.v1.app import auth
-
+from flask import jsonify, request
+from api.v1.views import app_views
+from models.user import User
 
 @app_views.route('/auth_session/login', methods=['POST'], strict_slashes=False)
 def login():
