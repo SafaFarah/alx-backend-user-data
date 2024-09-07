@@ -4,6 +4,7 @@ from api.v1.auth.auth import Auth
 import uuid
 from models.user import User
 
+
 class SessionAuth(Auth):
     """ SessionAuth class for managing session-based authentication """
     user_id_by_session_id = {}
