@@ -39,13 +39,13 @@ class DB:
         Returns:
             User: The newly created user object.
         """
+        new_user = User(email=email, hashed_password=hashed_password)
         try:
-            new_user = User(email=email, hashed_password=hashed_password)
             self._session.add(new_user)
             self._session.commit()
         except Exception:
-            session.rollback()
-            new_user = None
+            self._session.rollback()
+            raise
         return new_user
 
     def find_user_by(self, **kwargs) -> User:
