@@ -21,6 +21,7 @@ def _hash_password(password: str) -> bytes:
     hashed_password = bcrypt.hashpw(password.encode("utf-8"), salt)
     return hashed_password
 
+
 class Auth:
     """Auth class to interact with the authentication database.
     """
