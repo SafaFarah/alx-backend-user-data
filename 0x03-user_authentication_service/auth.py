@@ -7,7 +7,7 @@ import bcrypt
 from db import DB
 from user import User
 from sqlalchemy.orm.exc import NoResultFound
-import uuid
+from uuid import uuid4
 
 
 def _hash_password(password: str) -> bytes:
