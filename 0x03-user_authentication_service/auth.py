@@ -10,6 +10,11 @@ from sqlalchemy.orm.exc import NoResultFound
 from uuid import uuid4
 
 
+def _generate_uuid(self) -> str:
+    """Generates a new UUID and returns its string representation."""
+    return str(uuid4())
+
+
 def _hash_password(password: str) -> bytes:
     """
     Hashes the provided password using bcrypt.
@@ -52,7 +57,3 @@ class Auth:
         except NoResultFound:
             return False
         return False
-
-    def _generate_uuid(self) -> str:
-        """Generates a new UUID and returns its string representation."""
-        return str(uuid.uuid4())
