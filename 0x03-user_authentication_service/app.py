@@ -73,9 +73,12 @@ def get_reset_password_token():
     """Handle reset password requests."""
     email = request.form.get('email')
     if not email:
-        return jsonify({"error": "Email is missing"}), 403
-    reset_token = auth.get_reset_password_token(email)
-    return jsonify({"email": email, "reset_token": reset_token}), 200
+        abort(403)
+    try:
+        reset_token = AUTH.get_reset_password_token(email)
+    except ValueError:
+        abort(403)
+    return jsonify({"email": email, "reset_token": reset_token})
 
 
 if __name__ == "__main__":
