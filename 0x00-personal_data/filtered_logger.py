@@ -22,9 +22,10 @@ def filter_datum(fields: List[str], redaction: str, message: str,
     Returns:
         str: The obfuscated log message.
     """
-    pattern = r'(' + '|'.join(re.escape(field) for field in fields) + r')=([^'
-    pattern += re.escape(separator) + r']+)'
-    return re.sub(pattern, lambda m: f"{m.group(1)}={redaction}", message)
+    # Create the regex pattern for fields
+    pattern = r'(' + '|'.join(fields) + r')=[^' + re.escape(separator) + r']+'
+    # Replace the values of the fields with the redaction
+    return re.sub(pattern, lambda m: f'{m.group(1)}={redaction}', message)
 
 
 class RedactingFormatter(logging.Formatter):
