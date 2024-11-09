@@ -52,21 +52,43 @@ def get_logger() -> logging.Logger:
 
 def get_db() -> mysql.connector.connection.MySQLConnection:
     """
-     connection to the database using credentials from environment variables.
+    Connects to the database using credentials from environment variables.
+    Returns:
+        mysql.connector.connection.MySQLConnection: Database connection object.
     """
-    # Fetch environment variables with default values
-    user = os.getenv.get('PERSONAL_DATA_DB_USERNAME', 'root')
-    password = os.getenv.get('PERSONAL_DATA_DB_PASSWORD', '')
-    host = os.getenv.get('PERSONAL_DATA_DB_HOST', 'localhost')
-    database = os.getenv.get('PERSONAL_DATA_DB_NAME')
+    user = os.getenv('PERSONAL_DATA_DB_USERNAME', 'root')
+    password = os.getenv('PERSONAL_DATA_DB_PASSWORD', '')
+    host = os.getenv('PERSONAL_DATA_DB_HOST', 'localhost')
+    database = os.getenv('PERSONAL_DATA_DB_NAME')
 
-    # Create a database connection
-    return mysql.connector.connection.MySQLConnection(
+    return mysql.connector.connect(
         user=user,
         password=password,
         host=host,
         database=database
     )
+
+
+def main() -> None:
+    """Main function to read data from the users table
+    and log it with PII redacted."""
+    logger = get_logger()
+    db = get_db()
+    cursor = db.cursor()
+    query = (
+        "SELECT name, email, phone, ssn, password, ip, last_login, user_agent "
+        "FROM users;"
+    )
+    cursor.execute(query)
+    for row in cursor:
+        log_message = (
+                f"name={row[0]}; email={row[1]}; phone={row[2]} ;"
+                f"ssn={row[3]}; password={row[4]}; ip={row[5]} ;"
+                f"last_login={row[6]}; user_agent={row[7]};"
+                )
+        logger.info(log_message)
+    cursor.close()
+    db.close()
 
 
 class RedactingFormatter(logging.Formatter):
@@ -88,3 +110,7 @@ class RedactingFormatter(logging.Formatter):
         record.msg = filter_datum(
                 self.fields, self.REDACTION, message, self.SEPARATOR)
         return super(RedactingFormatter, self).format(record)
+
+
+if __name__ == '__main__':
+    main()
